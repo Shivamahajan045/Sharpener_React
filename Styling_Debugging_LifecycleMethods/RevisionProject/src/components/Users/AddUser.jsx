@@ -1,17 +1,32 @@
-import React from "react";
+// Write your code at relevant places in the code below:
+
+import React, { useState } from "react";
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import "./AddUser.css";
-import { useState } from "react";
 
 const AddUser = () => {
-  const [userData, setUserData] = useState({ userName: "", age: "" });
+  const [enteredUsername, setEnteredUsername] = useState("");
+  const [enteredAge, setEnteredAge] = useState("");
 
   const addUserHandler = (event) => {
     event.preventDefault();
-    console.log(userData.userName, userData.age);
+    if (enteredUsername.trim().length === 0 || enteredAge.trim().length === 0) {
+      return;
+    } else if (enteredAge <= 0) {
+      return;
+    }
+    console.log(enteredUsername, enteredAge);
+    setEnteredUsername("");
+    setEnteredAge("");
+  };
 
-    setUserData({ userName: "", age: "" });
+  const usernameChangeHandler = (event) => {
+    setEnteredUsername(event.target.value);
+  };
+
+  const ageChangeHandler = (event) => {
+    setEnteredAge(event.target.value);
   };
 
   return (
@@ -20,22 +35,16 @@ const AddUser = () => {
         <label htmlFor="username">Username</label>
         <input
           id="username"
-          name="userName"
           type="text"
-          value={userData.userName}
-          onChange={(e) =>
-            setUserData({ ...userData, [e.target.name]: e.target.value })
-          }
+          value={enteredUsername}
+          onChange={usernameChangeHandler}
         />
         <label htmlFor="age">Age</label>
         <input
           id="age"
           type="number"
-          name="age"
-          onChange={(e) =>
-            setUserData({ ...userData, [e.target.name]: e.target.value })
-          }
-          value={userData.age}
+          value={enteredAge}
+          onChange={ageChangeHandler}
         />
         <Button type="submit">Add User</Button>
       </form>
