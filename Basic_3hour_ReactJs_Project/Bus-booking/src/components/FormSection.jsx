@@ -1,14 +1,18 @@
 import React, { useState } from "react";
+import BookingForm from "./BookingForm";
+import Filter from "./Filter";
+import BookingList from "./BookingList";
 
 function FormSection() {
-  const [user, setUser] = useState({
+  const initialFormData = {
     name: "",
     email: "",
     phone: "",
     busNumber: "Bus 1",
-  });
+  };
+  const [formData, setFormData] = useState(initialFormData);
 
-  const [bus, setBus] = useState([]);
+  const [bookings, setBookings] = useState([]);
 
   const [editIndex, setEditIndex] = useState(null);
 
@@ -16,35 +20,36 @@ function FormSection() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+
     if (editIndex !== null) {
-      const updatedBus = [...bus];
-      updatedBus[editIndex] = user;
-      setBus(updatedBus);
+      setBookings((prev) =>
+        prev.map((booking) =>
+          booking.id === editIndex ? { ...formData, id: editIndex } : booking,
+        ),
+      );
       setEditIndex(null);
     } else {
-      setBus([...bus, user]);
+      setBookings((prev) => [
+        ...prev,
+        { ...formData, id: crypto.randomUUID() },
+      ]);
     }
 
-    setUser({
-      name: "",
-      email: "",
-      phone: "",
-      busNumber: "Bus 1",
-    });
+    setFormData(initialFormData);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleDelete = (id) => {
-    setBus(bus.filter((_, index) => id !== index));
+    setBookings((prev) => prev.filter((b) => b.id !== id));
   };
 
   const handleEdit = (id) => {
-    const usertobeEdited = bus[id];
-    setUser(usertobeEdited);
+    const bookingToEdit = bookings.find((b) => b.id === id);
+    setFormData(bookingToEdit);
     setEditIndex(id);
   };
 
@@ -52,93 +57,28 @@ function FormSection() {
     setFilterBus(e.target.value);
   };
 
-  const filteredBus =
+  const visibleBookings =
     filterBus === "ALL"
-      ? bus
-      : bus.filter((item) => item.busNumber === filterBus);
+      ? bookings
+      : bookings.filter((b) => b.busNumber === filterBus);
 
   return (
     <>
       <section className="container">
-        <div className="form-card">
-          <form onSubmit={handleFormSubmit}>
-            <div>
-              <label>Name</label>
-              <input
-                name="name"
-                value={user.name}
-                onChange={handleInputChange}
-              />
-            </div>
+        <BookingForm
+          formData={formData}
+          handleInputChange={handleInputChange}
+          handleFormSubmit={handleFormSubmit}
+          editIndex={editIndex}
+        />
 
-            <div>
-              <label>Email</label>
-              <input
-                name="email"
-                value={user.email}
-                onChange={handleInputChange}
-              />
-            </div>
+        <Filter filterBus={filterBus} handleSelectChange={handleSelectChange} />
 
-            <div>
-              <label>Phone</label>
-              <input
-                name="phone"
-                value={user.phone}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div>
-              <label>Bus Number</label>
-              <select
-                name="busNumber"
-                value={user.busNumber}
-                onChange={handleInputChange}
-              >
-                <option value="Bus 1">Bus 1</option>
-                <option value="Bus 2">Bus 2</option>
-                <option value="Bus 3">Bus 3</option>
-              </select>
-            </div>
-
-            <button type="submit">
-              {editIndex !== null ? "Update Booking" : "Book"}
-            </button>
-          </form>
-        </div>
-
-        <div className="filter">
-          <label>Filter by Bus:</label>
-          <select value={filterBus} onChange={handleSelectChange}>
-            <option value="ALL">All</option>
-            <option value="Bus 1">Bus 1</option>
-            <option value="Bus 2">Bus 2</option>
-            <option value="Bus 3">Bus 3</option>
-          </select>
-        </div>
-
-        <div className="list-card">
-          <h3>Bookings</h3>
-          <ul>
-            {filteredBus.map((item, index) => (
-              <li key={index} className="list-item">
-                <span>
-                  <strong>{item.name}</strong>
-                  <small>{item.email}</small>
-                  <small>
-                    📞 {item.phone} &nbsp; 🚌 {item.busNumber}
-                  </small>
-                </span>
-
-                <div className="actions">
-                  <button onClick={() => handleEdit(index)}>Edit</button>
-                  <button onClick={() => handleDelete(index)}>Delete</button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <BookingList
+          handleDelete={handleDelete}
+          handleEdit={handleEdit}
+          visibleBookings={visibleBookings}
+        />
       </section>
     </>
   );
