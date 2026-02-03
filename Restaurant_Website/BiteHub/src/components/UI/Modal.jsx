@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import classes from "./Modal.module.css";
 
-const Backdrop = (props) => {
+const Backdrop = () => {
   return <div className={classes.backdrop} />;
 };
 
