@@ -1,38 +1,43 @@
 import "./Navbar.css";
+import { NavLink } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
-const Navbar = ({ activeSection, onCartClick, onSectionChange }) => {
+const Navbar = ({ onCartClick }) => {
   const { itemCount } = useCart();
 
   return (
     <nav className="navbar">
       <ul className="navbar__links">
         <li>
-          <button
-            className={`navbar__link ${activeSection === "home" ? "navbar__link--active" : ""}`}
-            type="button"
-            onClick={() => onSectionChange("home")}
+          <NavLink
+            className={({ isActive }) =>
+              `navbar__link ${isActive ? "navbar__link--active" : ""}`
+            }
+            to="/"
+            end
           >
             Home
-          </button>
+          </NavLink>
         </li>
         <li>
-          <button
-            className={`navbar__link ${activeSection === "about" ? "navbar__link--active" : ""}`}
-            type="button"
-            onClick={() => onSectionChange("about")}
+          <NavLink
+            className={({ isActive }) =>
+              `navbar__link ${isActive ? "navbar__link--active" : ""}`
+            }
+            to="/about"
           >
             About
-          </button>
+          </NavLink>
         </li>
         <li>
-          <button
-            className={`navbar__link ${activeSection === "store" ? "navbar__link--active" : ""}`}
-            type="button"
-            onClick={() => onSectionChange("store")}
+          <NavLink
+            className={({ isActive }) =>
+              `navbar__link ${isActive ? "navbar__link--active" : ""}`
+            }
+            to="/store"
           >
             Store
-          </button>
+          </NavLink>
         </li>
       </ul>
       <button className="navbar__cart" type="button" onClick={onCartClick}>

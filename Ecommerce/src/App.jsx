@@ -1,5 +1,6 @@
 import "./App.css";
 import { useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Navbar from "./UI/Navbar";
 import Header from "./components/Header";
 import AboutSection from "./components/AboutSection";
@@ -10,38 +11,46 @@ import StoreSection from "./components/StoreSection";
 import { CartProvider } from "./context/CartContext";
 import { productsArr } from "./data/products";
 
+function HomePage() {
+  return (
+    <>
+      <Header />
+      <main className="page-shell">
+        <ToursSection />
+      </main>
+    </>
+  );
+}
+
+function AboutPage() {
+  return (
+    <main className="page-shell">
+      <AboutSection />
+    </main>
+  );
+}
+
+function StorePage() {
+  return (
+    <main className="page-shell">
+      <StoreSection title="Music" products={productsArr} />
+    </main>
+  );
+}
+
 function Storefront() {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
 
   return (
     <>
-      <Navbar
-        activeSection={activeSection}
-        onCartClick={() => setIsCartOpen(true)}
-        onSectionChange={setActiveSection}
-      />
+      <Navbar onCartClick={() => setIsCartOpen(true)} />
 
-      {activeSection === "home" && (
-        <>
-          <Header />
-          <main className="page-shell">
-            <ToursSection />
-          </main>
-        </>
-      )}
-
-      {activeSection === "about" && (
-        <main className="page-shell">
-          <AboutSection />
-        </main>
-      )}
-
-      {activeSection === "store" && (
-        <main className="page-shell">
-          <StoreSection title="Music" products={productsArr} />
-        </main>
-      )}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/store" element={<StorePage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
 
       <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       <Footer />
@@ -51,9 +60,11 @@ function Storefront() {
 
 function App() {
   return (
-    <CartProvider>
-      <Storefront />
-    </CartProvider>
+    <BrowserRouter>
+      <CartProvider>
+        <Storefront />
+      </CartProvider>
+    </BrowserRouter>
   );
 }
 
