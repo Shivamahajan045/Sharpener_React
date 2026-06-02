@@ -25,18 +25,16 @@ export function CartProvider({ children }) {
   const updateQuantity = (productId, quantity) => {
     const nextQuantity = Number(quantity);
 
+    if (Number.isNaN(nextQuantity)) {
+      return;
+    }
+
+    const safeQuantity = Math.max(1, nextQuantity);
+
     setCartItems((currentItems) =>
-      currentItems.flatMap((item) => {
-        if (item.id !== productId) {
-          return item;
-        }
-
-        if (Number.isNaN(nextQuantity) || nextQuantity < 1) {
-          return [];
-        }
-
-        return { ...item, quantity: nextQuantity };
-      }),
+      currentItems.map((item) =>
+        item.id === productId ? { ...item, quantity: safeQuantity } : item,
+      ),
     );
   };
 
@@ -53,10 +51,7 @@ export function CartProvider({ children }) {
 
   const totalPrice = useMemo(
     () =>
-      cartItems.reduce(
-        (total, item) => total + item.price * item.quantity,
-        0,
-      ),
+      cartItems.reduce((total, item) => total + item.price * item.quantity, 0),
     [cartItems],
   );
 

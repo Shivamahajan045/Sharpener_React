@@ -5,6 +5,14 @@ import { formatPrice } from "../utils/formatPrice";
 function CartModal({ isOpen, onClose }) {
   const { cartItems, removeFromCart, totalPrice, updateQuantity } = useCart();
 
+  const handleDecrease = (item) => {
+    updateQuantity(item.id, item.quantity - 1);
+  };
+
+  const handleIncrease = (item) => {
+    updateQuantity(item.id, item.quantity + 1);
+  };
+
   useEffect(() => {
     if (!isOpen) {
       return undefined;
@@ -56,15 +64,35 @@ function CartModal({ isOpen, onClose }) {
                     <span>{formatPrice(item.price)}</span>
                   </div>
                   <div className="cart-item__actions">
-                    <input
-                      aria-label={`Quantity for ${item.title}`}
-                      min="1"
-                      type="number"
-                      value={item.quantity}
-                      onChange={(event) =>
-                        updateQuantity(item.id, event.target.value)
-                      }
-                    />
+                    <div className="quantity-control">
+                      <button
+                        className="quantity-control__button"
+                        type="button"
+                        aria-label={`Decrease quantity for ${item.title}`}
+                        disabled={item.quantity <= 1}
+                        onClick={() => handleDecrease(item)}
+                      >
+                        -
+                      </button>
+                      <input
+                        className="quantity-control__input"
+                        aria-label={`Quantity for ${item.title}`}
+                        min="1"
+                        type="number"
+                        value={item.quantity}
+                        onChange={(event) =>
+                          updateQuantity(item.id, event.target.value)
+                        }
+                      />
+                      <button
+                        className="quantity-control__button"
+                        type="button"
+                        aria-label={`Increase quantity for ${item.title}`}
+                        onClick={() => handleIncrease(item)}
+                      >
+                        +
+                      </button>
+                    </div>
                     <button
                       className="button button--danger"
                       type="button"
