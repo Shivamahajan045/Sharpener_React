@@ -14,7 +14,7 @@ import { productsArr } from "./data/products";
 function HomePage() {
   return (
     <>
-      <Header />
+      <Header showActions={true} />
       <main className="page-shell">
         <ToursSection />
       </main>
@@ -32,9 +32,12 @@ function AboutPage() {
 
 function StorePage() {
   return (
-    <main className="page-shell">
-      <StoreSection title="Music" products={productsArr} />
-    </main>
+    <>
+      <Header compact={true} />
+      <main className="page-shell">
+        <StoreSection title="Music" products={productsArr} />
+      </main>
+    </>
   );
 }
 
@@ -42,19 +45,21 @@ function Storefront() {
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   return (
-    <>
+    <div className="app-shell">
       <Navbar onCartClick={() => setIsCartOpen(true)} />
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/store" element={<StorePage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <div className="app-content">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/store" element={<StorePage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
 
       <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       <Footer />
-    </>
+    </div>
   );
 }
 

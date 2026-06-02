@@ -14,6 +14,16 @@ body {
   min-height: 100vh;
 }
 
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+}
+
 body {
   font-family: Georgia, "Times New Roman", serif;
 }
@@ -31,23 +41,54 @@ input {
 .hero {
   display: grid;
   place-items: center;
-  min-height: 180px;
-  padding: 2rem clamp(1.25rem, 4vw, 4rem);
-  justify-content: center;
-  background-color: #978585;
+  min-height: 460px;
+  padding: 1.5rem clamp(1.25rem, 4vw, 4rem) 3.5rem;
+  background: #777474;
   color: white;
   text-align: center;
+}
+
+.hero--compact {
+  min-height: 140px;
+  padding-bottom: 2rem;
 }
 
 .hero__content {
   display: grid;
   place-items: center;
+  gap: 1.6rem;
 }
 
 .hero__content h1 {
   margin: 0;
-  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-size: clamp(4rem, 9vw, 7rem);
   line-height: 0.9;
+}
+
+.hero__album-button {
+  padding: 1rem 2.25rem;
+  border: 1px solid #56c7ea;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.hero__play-button {
+  display: grid;
+  place-items: center;
+  width: 98px;
+  height: 98px;
+  border: 2px solid #56c7ea;
+  border-radius: 999px;
+  background: transparent;
+  color: #56c7ea;
+  cursor: pointer;
+}
+
+.hero__play-icon {
+  margin-left: 0.35rem;
+  font-size: 2rem;
 }
 
 .page-shell {
@@ -406,8 +447,13 @@ input {
   }
 
   .hero {
-    min-height: 160px;
-    padding: 1.75rem 1.25rem;
+    min-height: 380px;
+    padding: 1.75rem 1.25rem 3rem;
+  }
+
+  .hero--compact {
+    min-height: 200px;
+    padding-bottom: 1.75rem;
   }
 }
 
@@ -452,6 +498,19 @@ input {
   .cart-modal__panel {
     margin: 1rem auto;
     max-height: calc(100vh - 2rem);
+  }
+
+  .hero__content {
+    gap: 1.25rem;
+  }
+
+  .hero__album-button {
+    width: min(100%, 320px);
+  }
+
+  .hero__play-button {
+    width: 84px;
+    height: 84px;
   }
 
   .cart-item,
