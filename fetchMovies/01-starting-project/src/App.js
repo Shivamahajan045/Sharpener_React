@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 import MoviesList from "./components/MoviesList";
 import "./App.css";
@@ -6,11 +6,11 @@ import "./App.css";
 function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const [retrying, setRetrying] = useState(false);
   const [cancelRetry, setCancelRetry] = useState(false);
 
-  const fetchMoviesHandler = async () => {
+  const fetchMoviesHandler = useCallback(async () => {
     try {
       setIsLoading(true);
       setError("");
@@ -29,12 +29,16 @@ function App() {
       setRetrying(false);
       setError("");
     } catch (err) {
-      setError("Something went wrong....Retrying");
+      setError(err.message);
       setRetrying(true);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchMoviesHandler();
+  }, [fetchMoviesHandler]);
 
   useEffect(() => {
     if (!retrying || cancelRetry) return;
@@ -45,7 +49,7 @@ function App() {
     return () => {
       clearInterval(id);
     };
-  }, [retrying, cancelRetry]);
+  }, [retrying, cancelRetry, fetchMoviesHandler]);
 
   return (
     <React.Fragment>
